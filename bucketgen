@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+import json
+import os
+import string
+
+
+_TF_VARS_FILENAME="terraform.tfvars.json"
+_PROJECTS_DIR='build/Builds'
+
+
+def camel_to_kebab(name):
+    tokens = []
+    token_index = 0
+
+    for l in name:
+        if l in string.ascii_uppercase:
+            tokens.append('')
+            token_index += 1
+        tokens[token_index-1] += l.lower()
+    return '-'.join(tokens)
+
+
+def run():
+    projects = os.listdir(_PROJECTS_DIR)
+    buckets = [camel_to_kebab(p) for p in projects]
+    with open(_TF_VARS_FILENAME, 'w') as f:
+        f.write(json.dumps({"buckets": buckets}))
+
+
+if __name__=="__main__":
+    run()
