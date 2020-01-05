@@ -6,6 +6,7 @@ import string
 
 _TF_VARS_FILENAME="terraform.tfvars.json"
 _PROJECTS_DIR='build/Builds'
+_BUCKET_SUFFIX=".mucana.org"
 
 
 def camel_to_kebab(name):
@@ -22,9 +23,11 @@ def camel_to_kebab(name):
 
 def run():
     projects = os.listdir(_PROJECTS_DIR)
-    buckets = [camel_to_kebab(p) for p in projects]
+    projects = [camel_to_kebab(p) for p in projects]
+    buckets = [p + _BUCKET_SUFFIX for p in projects]
+    cnames = {p: b for p, b in zip(projects, buckets)}
     with open(_TF_VARS_FILENAME, 'w') as f:
-        f.write(json.dumps({"buckets": buckets}))
+        f.write(json.dumps({"buckets": buckets, "cnames": cnames}))
 
 
 if __name__=="__main__":
