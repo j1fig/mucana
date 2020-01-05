@@ -1,14 +1,14 @@
 provider "aws" {
   profile = "personal"
-  region = "eu-west-1"
+  region  = "eu-west-1"
 }
 
 variable "buckets" {
-  type    = list(string)
+  type = list(string)
 }
 
 variable "cnames" {
-  type    = map(string)
+  type = map(string)
 }
 
 data "aws_route53_zone" "mucana_org" {
@@ -20,7 +20,8 @@ resource "aws_s3_bucket" "b" {
 
   bucket = each.key
   region = "eu-west-1"
-  acl = "public-read"
+  acl    = "public-read"
+  policy = file("policies/${each.key}.json")
 
   website {
     index_document = "index.html"
@@ -36,11 +37,11 @@ resource "aws_route53_record" "r" {
 
   zone_id = data.aws_route53_zone.mucana_org.id
   name    = each.key
-  type    = "CNAME"
+  type    = "A"
 
   alias {
-    name    = aws_s3_bucket.b[each.value].website_domain
-    zone_id = aws_s3_bucket.b[each.value].hosted_zone_id
+    name                   = aws_s3_bucket.b[each.value].website_domain
+    zone_id                = aws_s3_bucket.b[each.value].hosted_zone_id
     evaluate_target_health = false
   }
 }
