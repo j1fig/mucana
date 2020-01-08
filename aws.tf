@@ -45,3 +45,30 @@ resource "aws_route53_record" "r" {
     evaluate_target_health = false
   }
 }
+
+resource "aws_s3_bucket" "mucana_org" {
+  bucket = "mucana.org"
+  region = "eu-west-1"
+  acl    = "public-read"
+  policy = file("policies/mucana.org.json")
+
+  website {
+    index_document = "index.html"
+  }
+
+  tags = {
+    Service = "mucana"
+  }
+}
+
+resource "aws_route53_record" "mucana_org" {
+  zone_id = data.aws_route53_zone.mucana_org.id
+  name    = "mucana.org"
+  type    = "A"
+
+  alias {
+    name                   = aws_s3_bucket.mucana_org.website_domain
+    zone_id                = aws_s3_bucket.mucana_org.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
