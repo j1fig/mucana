@@ -3,6 +3,8 @@ mucana
 
 Website and configuration for mucana.org.
 
+This tool will deploy any number of Unity 3D Web builds into respective subdomains of mucana.org.
+
 
 ## Requirements
 
@@ -14,7 +16,7 @@ In order to deploy the infrastructure for mucana.org you will need
 After getting these you should create the python virtualenv and install the requirements via
 
 	python3 -m venv .venv
-	. ./venv/bin/activate  # the rest of this document will assum you have this venv active.
+	. ./venv/bin/activate  # the rest of this document will assume you have this venv active.
 	pip install -r requirements.txt
 
 
